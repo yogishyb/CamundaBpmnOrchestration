@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: CamundaBpmnOrchestration
+
+  servlet:
+    multipart:
+      enabled: true
+server:
+  port: 8090
+

@@ -1,0 +1,11 @@
+rootProject.name = 'CamundaBpmnOrchestration'
+include 'StartingService'
+include 'ReusableLibrary'
+include 'DatabaseServer'
+include 'ZeebeWorkers:NotificationServer'
+include 'ZeebeWorkers:PaymentProcessor'
+
+findProject(':ZeebeWorkers:PaymentProcessor')?.name = 'PaymentProcessor'
+
+findProject(':ZeebeWorkers:NotificationServer')?.name = 'NotificationServer'
+

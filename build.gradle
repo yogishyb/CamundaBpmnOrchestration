@@ -1,0 +1,105 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.2'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.yogish.zeebe'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(23)
+    }
+}
+
+
+allprojects {
+
+    group = 'com.yogish.zeebe'
+    version = '0.0.1-SNAPSHOT'
+
+
+    repositories {
+        mavenCentral()
+    }
+
+}
+apply plugin: 'base'
+
+
+subprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+
+
+        compileOnly 'org.projectlombok:lombok:1.18.36'
+        annotationProcessor 'org.projectlombok:lombok:1.18.36'
+
+
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+        testCompileOnly 'org.projectlombok:lombok:1.18.36'
+        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
+
+
+        if (project.name != 'ReusableLibrary') {
+            implementation project(':ReusableLibrary')
+        }
+
+        if(project.name == 'StartingService'){
+            implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4'
+        }
+
+        if(project.name != 'DatabaseServer'){
+            implementation 'io.camunda:zeebe-client-java:8.6.7'
+            implementation 'io.camunda:spring-boot-starter-camunda-sdk:8.6.7'
+
+
+        }
+    }
+
+
+    if (project.name == 'ZeebeWorkers' || project.name == 'ReusableLibrary') {
+        tasks.named('bootJar') {
+            enabled = false
+        }
+
+        tasks.named('resolveMainClassName') {
+            enabled = false
+        }
+    } else {
+        tasks.named('bootJar') {
+            enabled = true
+        }
+    }
+
+    if (project.name == 'ZeebeWorkers') {
+        tasks.named('jar') {
+            enabled = false
+        }
+    }
+
+    tasks.named('test') {
+        useJUnitPlatform()
+    }
+
+}
+
+tasks.named('jar') {
+    enabled = false
+}
+
+tasks.named('bootJar') {
+    enabled = false
+}
+
+
+
